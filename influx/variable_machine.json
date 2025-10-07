@@ -1,0 +1,16 @@
+[
+  {
+    "apiVersion": "influxdata.com/v2alpha1",
+    "kind": "Variable",
+    "metadata": {
+      "name": "variable-sensors-machine"
+    },
+    "spec": {
+      "language": "flux",
+      "name": "machine",
+      "query": "import \"strings\"\r\n\r\nfrom(bucket: \"sensors\")\r\n    |> range(start: -30d)\r\n    |> filter(fn: (r) => r[\"_measurement\"] == \"sensor\")\r\n    |> filter(fn: (r) => r[\"_field\"] != \"anomaly\")\r\n    |> filter(fn: (r) => strings.hasSuffix(v:r[\"topic\"], suffix:v.machine_type))\r\n    |> group(columns: [\"machine\"])\r\n    |> distinct(column: \"machine\")\r\n    |> keep(columns: [\"_value\"])",
+      "selected": [],
+      "type": "query"
+    }
+  }
+]

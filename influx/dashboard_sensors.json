@@ -1,0 +1,269 @@
+[
+  {
+    "apiVersion": "influxdata.com/v2alpha1",
+    "kind": "Dashboard",
+    "metadata": {
+      "name": "dashboard-sensors"
+    },
+    "spec": {
+      "charts": [
+        {
+          "axes": [
+            {
+              "base": "10",
+              "name": "x",
+              "scale": "linear"
+            },
+            {
+              "base": "10",
+              "name": "y",
+              "scale": "linear"
+            }
+          ],
+          "colorizeRows": true,
+          "colors": [
+            {
+              "id": "UasnAbtmNBPU7TjypAgDQ",
+              "name": "Nineteen Eighty Four",
+              "type": "scale",
+              "hex": "#31C0F6"
+            },
+            {
+              "id": "-t3XZoWH-zI5ETMnLrUNC",
+              "name": "Nineteen Eighty Four",
+              "type": "scale",
+              "hex": "#A500A5"
+            },
+            {
+              "id": "bWelwz5cjAr3YRlFoov6y",
+              "name": "Nineteen Eighty Four",
+              "type": "scale",
+              "hex": "#FF7E27"
+            }
+          ],
+          "geom": "line",
+          "height": 4,
+          "hoverDimension": "auto",
+          "kind": "Xy",
+          "legendColorizeRows": true,
+          "legendOpacity": 1,
+          "legendOrientationThreshold": 100000000,
+          "name": "Sensor Readings",
+          "opacity": 1,
+          "orientationThreshold": 100000000,
+          "position": "overlaid",
+          "queries": [
+            {
+              "query": "from(bucket: \"sensors\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"machine\"] == v.machine)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"sensor\")\n  |> filter(fn: (r) => r[\"_field\"] != \"anomaly\")"
+            }
+          ],
+          "staticLegend": {
+            "colorizeRows": true,
+            "opacity": 1,
+            "orientationThreshold": 100000000,
+            "widthRatio": 1
+          },
+		  "timeFormat": "HH:mm:ss",
+          "width": 4,
+          "widthRatio": 1,
+          "xCol": "_time",
+          "yCol": "_value"
+        },
+        {
+          "axes": [
+            {
+              "name": "x"
+            },
+            {
+              "name": "y"
+            }
+          ],
+          "binSize": 10,
+          "colors": [
+            {
+              "hex": "#000004"
+            },
+            {
+              "hex": "#110a30"
+            },
+            {
+              "hex": "#320a5e"
+            },
+            {
+              "hex": "#57106e"
+            },
+            {
+              "hex": "#781c6d"
+            },
+            {
+              "hex": "#9a2865"
+            },
+            {
+              "hex": "#bc3754"
+            },
+            {
+              "hex": "#d84c3e"
+            },
+            {
+              "hex": "#ed6925"
+            },
+            {
+              "hex": "#f98e09"
+            },
+            {
+              "hex": "#fbb61a"
+            },
+            {
+              "hex": "#f4df53"
+            }
+          ],
+          "height": 4,
+          "kind": "Heatmap",
+          "legendColorizeRows": true,
+          "legendOpacity": 1,
+          "legendOrientationThreshold": 100000000,
+          "name": "Inference times (sec)",
+          "queries": [
+            {
+              "query": "import \"experimental/prometheus\"\n\nfrom(bucket: \"sensors\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"prometheus\")\n  |> filter(fn: (r) => r[\"_field\"] == \"rest_server_request_duration_seconds_bucket\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> prometheus.histogramQuantile(quantile: 0.99, onNonmonotonic: \"force\")"
+            }
+          ],
+          "staticLegend": {},
+		  "timeFormat": "HH:mm:ss",
+          "width": 4,
+          "xCol": "_time",
+          "yCol": "_value",
+          "yPos": 4
+        },
+        {
+          "axes": [
+            {
+              "base": "10",
+              "name": "x",
+              "scale": "linear"
+            },
+            {
+              "name": "y",
+              "scale": "linear"
+            }
+          ],
+          "colorizeRows": true,
+          "colors": [
+            {
+              "id": "lIQy-9iId8rCJ7vpbQYJu",
+              "name": "Solid Red",
+              "type": "scale",
+              "hex": "#DC4E58"
+            },
+            {
+              "id": "iXAXOo5xosM8EkRpCJTJF",
+              "name": "Solid Red",
+              "type": "scale",
+              "hex": "#DC4E58"
+            },
+            {
+              "id": "3DVshSlSUiqIr5Jt5eqCP",
+              "name": "Solid Red",
+              "type": "scale",
+              "hex": "#DC4E58"
+            }
+          ],
+          "generateYAxisTicks": [
+            "yTotalTicks",
+            "yTickStart",
+            "yTickStep"
+          ],
+          "geom": "line",
+          "height": 4,
+          "hoverDimension": "auto",
+          "kind": "Xy",
+          "legendColorizeRows": true,
+          "legendOpacity": 1,
+          "legendOrientationThreshold": 100000000,
+          "name": "Anomaly Threshold",
+          "opacity": 1,
+          "orientationThreshold": 100000000,
+          "position": "overlaid",
+          "queries": [
+            {
+              "query": "from(bucket: \"sensors\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"machine\"] == v.machine)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"sensor\")\n  |> filter(fn: (r) => r[\"_field\"] == \"anomaly\")"
+            }
+          ],
+          "staticLegend": {
+            "colorizeRows": true,
+            "opacity": 1,
+            "orientationThreshold": 100000000,
+            "widthRatio": 1
+          },
+		  "timeFormat": "HH:mm:ss",
+          "width": 4,
+          "widthRatio": 1,
+          "xCol": "_time",
+          "xPos": 4,
+          "yCol": "_value",
+		  "yDomain": [
+			"yDomainStart",
+			"yDomainStop"
+		  ],
+		  "yDomainStart": 0,
+		  "yDomainStop": 1.2,
+		  "yTickStart": 0,
+          "yTickStep": 1,
+          "yTotalTicks": 3
+        },
+        {
+          "colors": [
+            {
+              "id": "base",
+              "name": "laser",
+              "type": "text",
+              "hex": "#00C9FF"
+            }
+          ],
+          "decimalPlaces": 0,
+          "height": 2,
+          "kind": "Single_Stat",
+          "name": "Successful Inferences (all machines)",
+          "note": "0",
+          "queries": [
+            {
+              "query": "import \"strings\"\n\nfrom(bucket: \"sensors\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"prometheus\")\n  |> filter(fn: (r) => r[\"_field\"] == \"rest_server_requests_total\")\n  |> filter(fn: (r) => r[\"status_code\"] == \"200\")\n  |> filter(fn: (r) => r[\"path\"] == \"/invocations\")\n  |> filter(fn: (r) => strings.containsStr(v: r[\"url\"], substr: v.machine_type))\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"last\")"
+            }
+          ],
+		  "showNoteWhenEmpty": true,
+          "staticLegend": {},
+          "width": 4,
+          "xPos": 4,
+          "yPos": 4
+        },
+        {
+          "colors": [
+            {
+              "id": "base",
+              "name": "fire",
+              "type": "text",
+              "hex": "#DC4E58"
+            }
+          ],
+          "decimalPlaces": 0,
+          "height": 2,
+          "kind": "Single_Stat",
+          "name": "Failed Inferences (all machines)",
+          "note": "0",
+          "queries": [
+            {
+              "query": "import \"strings\"\n\nfrom(bucket: \"sensors\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"prometheus\")\n  |> filter(fn: (r) => r[\"_field\"] == \"rest_server_requests_total\")\n  |> filter(fn: (r) => r[\"status_code\"] != \"200\")\n  |> filter(fn: (r) => r[\"path\"] == \"/invocations\")\n  |> filter(fn: (r) => strings.containsStr(v: r[\"url\"], substr: v.machine_type))\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"last\")"
+            }
+          ],
+		  "showNoteWhenEmpty": true,
+          "staticLegend": {},
+          "width": 4,
+          "xPos": 4,
+          "yPos": 6
+        }
+      ],
+      "description": "Monitor machine sensors for anomalies",
+      "name": "Sensors"
+    }
+  }
+]
